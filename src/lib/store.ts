@@ -11,6 +11,8 @@ const doc = new Y.Doc();
 
 const userName = randomName();
 const userColor = randomColor();
+const canvasWidth = 16;
+const canvasHeight = 16;
 
 type User = {
 	id: number;
@@ -23,8 +25,7 @@ type User = {
 };
 
 type State = {
-	count: number;
-	pixels: [];
+	pixels: number[];
 };
 
 type UsersState = {
@@ -32,8 +33,7 @@ type UsersState = {
 };
 
 const state = proxy<State>({
-	count: 0,
-	pixels: []
+	pixels: new Array(canvasWidth * canvasHeight).fill(0)
 });
 
 const usersState = proxy<UsersState>({
@@ -48,10 +48,10 @@ if (browser) {
 	provider = new WebrtcProvider('svelte-yjs-canvas-demo', doc);
 	persistence = new IndexeddbPersistence('svelte-yjs-canvas-demo', doc);
 
-	// doc.on('beforeTransaction', (...args) => console.log('beforeTransaction', ...args))
-	// doc.on('beforeObserverCalls', (...args) => console.log('beforeObserverCalls', ...args))
-	// doc.on('afterTransaction', (...args) => console.log('afterTransaction', ...args))
-	// doc.on('update', (...args) => console.log('update', ...args))
+	// doc.on('beforeTransaction', (...args) => console.log('beforeTransaction', ...args));
+	// doc.on('beforeObserverCalls', (...args) => console.log('beforeObserverCalls', ...args));
+	// doc.on('afterTransaction', (...args) => console.log('afterTransaction', ...args));
+	// doc.on('update', (...args) => console.log('update', ...args));
 
 	currentUserId = provider?.awareness.clientID;
 
@@ -90,4 +90,10 @@ function updateUserCursor(cursorState: { x: number; y: number }) {
 	});
 }
 
-export { state, usersState, currentUserId, updateUserCursor };
+function setPixel(pixel: { x: number; y: number }, filled: boolean) {
+	// state.pixels[`${pixel.x}-${pixel.y}`] = Number(filled);
+	// state.pixelValue = Number(filled);
+	state.pixels[pixel.x + pixel.y * canvasWidth] = Number(filled);
+}
+
+export { state, usersState, canvasWidth, canvasHeight, currentUserId, setPixel, updateUserCursor };
