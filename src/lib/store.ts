@@ -4,7 +4,8 @@ import { proxy } from 'sveltio';
 import { bindProxyAndYMap } from 'valtio-yjs';
 import { WebrtcProvider } from 'y-webrtc';
 import { IndexeddbPersistence } from 'y-indexeddb';
-import { randomColor, randomName } from './user';
+import { randomName } from './user';
+import { randomColor } from './palette';
 
 // create a new Y doc
 const doc = new Y.Doc();
@@ -38,6 +39,10 @@ const state = proxy<State>({
 
 const usersState = proxy<UsersState>({
 	users: []
+});
+
+const drawState = proxy<{ selectedColor: number }>({
+	selectedColor: 0
 });
 
 let provider: WebrtcProvider | undefined;
@@ -90,10 +95,22 @@ function updateUserCursor(cursorState: { x: number; y: number }) {
 	});
 }
 
-function setPixel(pixel: { x: number; y: number }, filled: boolean) {
-	// state.pixels[`${pixel.x}-${pixel.y}`] = Number(filled);
-	// state.pixelValue = Number(filled);
-	state.pixels[pixel.x + pixel.y * canvasWidth] = Number(filled);
+function setPixel(pixel: { x: number; y: number }, colorIndex: number) {
+	state.pixels[pixel.x + pixel.y * canvasWidth] = colorIndex;
 }
 
-export { state, usersState, canvasWidth, canvasHeight, currentUserId, setPixel, updateUserCursor };
+function pickColor(color: number) {
+	drawState.selectedColor = color;
+}
+
+export {
+	state,
+	usersState,
+	drawState,
+	canvasWidth,
+	canvasHeight,
+	currentUserId,
+	setPixel,
+	pickColor,
+	updateUserCursor
+};

@@ -1,11 +1,13 @@
 <script lang="ts">
   import Cursor from '$lib/components/icons/cursor.svelte';
-  import { currentUserId, state, canvasWidth, canvasHeight, updateUserCursor, setPixel, usersState } from '$lib/store';
+  import { getPaletteColor } from '$lib/palette';
+  import { currentUserId, state, canvasWidth, canvasHeight, updateUserCursor, setPixel, usersState, drawState } from '$lib/store';
   import { useSnapshot } from 'sveltio';
   import Pixel from './pixel.svelte';
 
   const sharedState = useSnapshot(state);
   const usersList = useSnapshot(usersState);
+  const draw = useSnapshot(drawState);
 
   const onMove = (e: MouseEvent) => {
     const {clientX, clientY} = e;
@@ -30,11 +32,8 @@
       {#each grid as row, y}
         <div class="flex">
           {#each row as _, x}
-            {@const filled = $sharedState.pixels[x + y * canvasWidth] > 0}
-
-            <Pixel filled={filled} on:click={() => {
-              setPixel({ x, y }, !filled);
-            }} />
+            {@const color = getPaletteColor($sharedState.pixels[x + y * canvasWidth] || 0)}
+            <Pixel color={color} on:click={() => setPixel({ x, y }, $draw.selectedColor)} />
           {/each}
         </div>
       {/each}
