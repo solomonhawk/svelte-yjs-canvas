@@ -14,4 +14,6 @@
       <button on:click={() => pickColor(i)} class="w-full block h-full" />
     </li>
   {/each}
+
+  <slot />
 </ol>

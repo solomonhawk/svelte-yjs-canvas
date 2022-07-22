@@ -32,7 +32,7 @@
       {#each grid as row, y}
         <div class="flex">
           {#each row as _, x}
-            {@const color = getPaletteColor($sharedState.pixels[x + y * canvasWidth] || 0)}
+            {@const color = getPaletteColor($sharedState.value.pixels[x + y * canvasWidth] || 0)}
             <Pixel color={color} on:click={() => setPixel({ x, y }, $draw.selectedColor)} />
           {/each}
         </div>

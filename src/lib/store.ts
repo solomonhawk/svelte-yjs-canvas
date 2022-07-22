@@ -1,6 +1,7 @@
 import { browser } from '$app/env';
 import * as Y from 'yjs';
 import { proxy } from 'sveltio';
+import { proxyWithHistory } from 'sveltio/utils';
 import { bindProxyAndYMap } from 'valtio-yjs';
 import { WebrtcProvider } from 'y-webrtc';
 import { IndexeddbPersistence } from 'y-indexeddb';
@@ -33,7 +34,7 @@ type UsersState = {
 	users: User[];
 };
 
-const state = proxy<State>({
+const state = proxyWithHistory<State>({
 	pixels: new Array(canvasWidth * canvasHeight).fill(0)
 });
 
@@ -96,7 +97,7 @@ function updateUserCursor(cursorState: { x: number; y: number }) {
 }
 
 function setPixel(pixel: { x: number; y: number }, colorIndex: number) {
-	state.pixels[pixel.x + pixel.y * canvasWidth] = colorIndex;
+	state.value.pixels[pixel.x + pixel.y * canvasWidth] = colorIndex;
 }
 
 function pickColor(color: number) {
