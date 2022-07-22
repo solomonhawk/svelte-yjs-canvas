@@ -1,2 +1,9 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<script lang="ts">
+  import {useSnapshot} from 'sveltio';
+  import {state} from '$lib/store';
+  const snap = useSnapshot(state);
+</script>
+
+<button on:click={() => state.count++}>
+  {$snap.count}
+</button>
