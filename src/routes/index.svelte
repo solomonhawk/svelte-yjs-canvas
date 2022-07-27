@@ -1,13 +1,18 @@
 <script lang="ts">
-  import Palette from '$lib/components/palette.svelte';
-  import History from '$lib/components/history.svelte';
+  import AppBar from '$lib/components/app-bar.svelte';
   import Canvas from '$lib/components/canvas.svelte';
+  import Loading from '$lib/components/loading.svelte';
   import Presence from '$lib/components/presence.svelte';
+  import { localState } from '$lib/store';
+  import { useSnapshot } from 'sveltio';
+
+  const local = useSnapshot(localState);
 </script>
 
-<Palette>
-  <History />
-</Palette>
-
-<Canvas />
-<Presence />
+{#if $local.synced}
+  <AppBar />
+  <Canvas />
+  <Presence />
+{:else}
+  <Loading />
+{/if}
